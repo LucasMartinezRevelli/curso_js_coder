@@ -1,5 +1,5 @@
 /////////////////////////PRIMER ALGORITMO/////////////////////////////////////
-alert("Especifique su edad para poder pasar al boliche");
+/*alert("Especifique su edad para poder pasar al boliche");
 let respuesta = parseInt(prompt("ingrese su edad:"));
 if (respuesta >=18 && respuesta <=50){
   alert("Podes ingresar");
@@ -36,4 +36,53 @@ while (entrada != "SALIR") {
       break;
   }
   entrada = prompt("Ingresar un nombre");
+}*/
+
+//creo la clase constructora para las peliculas
+const listaQuiero = [];
+const listaVistas = [];
+//////////////////////////////////////////////////////////////////////////////////////////    CLASES   ///////////////////////////////////////
+//se crea clase constructora para las peliculas que quiero
+class Quiero {
+  constructor(titulo) {
+      this.titulo = titulo;
+  }
+
+  obtenerInformacionQuiero() {                          //se crea evento
+    console.log(`Agregado a quiero: ${this.titulo}`);
+  }
 }
+
+//se crea clase constructora para las peliculas que ya las vi
+class Vistas {
+  constructor(titulo) {
+      this.titulo = titulo;
+  }
+  obtenerInformacionVistas() {                           //se crea evento
+    console.log(`Agregado a vistas: ${this.titulo}`);
+  }
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+document.getElementById('agregarQuiero').addEventListener('click', () =>                    //obtengo valor del input de QUIERO
+{
+  const titulo = document.getElementById('entrada').value;
+  const nuevoQuiero = new Quiero(titulo);                       //se crea objeto con los valores ingresados
+  nuevoQuiero.obtenerInformacionQuiero();                       //se llama al evento
+
+  listaQuiero.push(nuevoQuiero);                                  //se agrega dato a array
+});
+
+document.getElementById('agregarVistas').addEventListener('click', () =>        //obtengo valor del input de VISTAS
+{
+  const titulo = document.getElementById('entrada').value;
+  const nuevaVista = new Vistas(titulo);                              //se crea objeto con los valores ingresados
+
+  nuevaVista.obtenerInformacionVistas();
+
+  listaVistas.push(nuevaVista); 
+});
+
+
+console.log(listaQuiero);
+console.log(listaVistas);

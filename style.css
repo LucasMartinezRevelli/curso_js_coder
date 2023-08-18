@@ -1,0 +1,54 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: content-box; /*::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+}
+
+.titu{
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+}
+
+.cont{
+  display: flex;
+  justify-content: center;
+  margin-top: 5%;
+}
+
+.quiero{
+  margin-right: 5%;
+}
+.quiero p{
+  display: flex;
+  justify-content: center;
+}
+
+.botones_seleccion{
+  display: flex;
+  justify-content: center;
+  margin-top: 20%;
+}
+
+/* Estilos básicos del botón */
+.boton_ovalado {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #3498db;
+  color: #fff;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Efecto hover */
+.boton_ovalado:hover {
+  background-color: #2980b9;
+}
