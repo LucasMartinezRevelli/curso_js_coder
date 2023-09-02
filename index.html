@@ -7,43 +7,28 @@
   <title>Principal</title>
 </head>
 <body>
-  <header>
-  </header>
-  <main>
-    <section>
-      <h1 class="titu">Organizador de series y peliculas</h1>
-      <div class="cont">
-        <div class="quiero"> 
-          <h4>Quiero ver</h3>
-          <p>numero</p>
-        </div>
-        <div> 
-          <h4>Vistas</h3>
-          <p>numero</p>
-        </div>
-      </div>
-    </section>
-    <section>
-      <input type="text" id="entrada">
-      <button id="agregarQuiero">Agregar a quiero</button>
-      <button id="agregarVistas">Agregar a Vistas</button>
-    </section>
-    <section>
-      <div class="botones_seleccion">
-        <button class="boton_ovalado">vistas</button>
-        <button class="boton_ovalado">próximas a ver</button>
-      </div>
-      <div>
-        cards!!
-      </div>
-    </section>
-  </main>
+  <h1>Buscador de Películas y Series</h1>
 
+  <div class="contenedorBusqueda">
+    <input type="text" class ="buscador" id="searchInput" placeholder="Buscar...">
+    <button class="botonBusqueda"  id="searchButton">Buscar</button>
+    <div class="contenedor" id="results">
+      <ul>
+        <a></a>
+      </ul>
+    </div>
+  </div>
 
+  <div class="info">
+    <h3 class="infoVistas">vistas:</h3>
+    <span id="contadorVistas">0</span>
+    <h3 class="infoQuiero">Quiero:</h3>
+    <span id="contadorQuiero">0</span>
+  </div>
 
-
-
-
+  <div>
+    
+  </div>
   <script src="./main.js"></script>
 </body>
 </html>
