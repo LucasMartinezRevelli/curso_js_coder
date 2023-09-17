@@ -1,10 +1,14 @@
 // API Key obtenida desde el sitio web de TMDb
 const apiKey = '1ab128a09cfa006a7c32b0dc4ab0847a';
 
+
 // Elementos del DOM
 const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
 const resultsContainer = document.getElementById('results');
+
+const quieroList = document.getElementById('quieroList'); 
+const vistasList = document.getElementById('vistasList');
 
 // Agregar un evento de clic al botón de búsqueda
 searchButton.addEventListener('click', async () => {
@@ -45,16 +49,104 @@ const displayResults = (results) => {
               <a class="card">
                 <img src="${imageUrl}" alt="${title} Image">
                 <h4>${title}</h4>
-                <button class="quieroBoton" id="quieroBoton">Quiero</button>
-                <button class="vistaBoton" id="vistasBoton">Vista</button>
+                <button class="quieroBoton">Quiero</button>
+                <button class="vistaBoton">Vista</button>
               </a>
             </ul>
             </div>
               
           `;
           resultsContainer.appendChild(item);
+
+          // Agregar eventos de clic a los botones "Quiero" y "Vista" dentro del elemento actual
+          const quieroBoton = item.querySelector('.quieroBoton');
+          const vistaBoton = item.querySelector('.vistaBoton');
+
+          quieroBoton.addEventListener('click', () => {
+            const imageUrl = getImageUrl(result);
+            agregarPeliculaQuiero(title, imageUrl);
+            quieroBoton.disabled = true;
+            quieroBoton.classList.add('pressed');
+        });
+        
+          vistaBoton.addEventListener('click', () => {
+            const imageUrl = getImageUrl(result);
+            agregarPeliculaVista(title, imageUrl);
+            vistaBoton.disabled = true;
+        });
+
         }
     });
+}
+
+
+// Función para agregar una película a la lista "Quiero" con imagen
+const agregarPeliculaQuiero = (title, imageUrl) => {
+  // Verificar si la película ya está en la lista "Vista" y eliminarla si es necesario
+  const peliculaEnVista = encontrarPeliculaEnLista(title, vistasList);
+  if (peliculaEnVista) {
+      vistasList.removeChild(peliculaEnVista);
+      decrementarContadorV();
+  }
+
+  // Verificar si la película ya está en la lista "Quiero"
+  const peliculaEnQuiero = encontrarPeliculaEnLista(title, quieroList);
+
+  if (!peliculaEnQuiero) {
+      // Si la película no está en la lista "Quiero", agrégala
+      const listItem = document.createElement('li');
+      const image = document.createElement('img');
+      image.src = imageUrl;
+      image.alt = title;
+      listItem.appendChild(image);
+      listItem.appendChild(document.createTextNode(title));
+      quieroList.appendChild(listItem);
+
+
+      // Guardar la lista actualizada en localStorage
+    guardarListaEnLocalStorage('quieroList', quieroList.innerHTML);
+
+  }
+
+
+}
+
+// Función para agregar una película a la lista "Vistas" con imagen
+const agregarPeliculaVista = (title, imageUrl) => {
+  // Verificar si la película ya está en la lista "Quiero" y eliminarla si es necesario
+  const peliculaEnQuiero = encontrarPeliculaEnLista(title, quieroList);
+  if (peliculaEnQuiero) {
+      quieroList.removeChild(peliculaEnQuiero);
+      decrementarContadorQ();
+  }
+
+  // Verificar si la película ya está en la lista "Vistas"
+  const peliculaEnVista = encontrarPeliculaEnLista(title, vistasList);
+
+  if (!peliculaEnVista) {
+      // Si la película no está en la lista "Vistas", agrégala
+      const listItem = document.createElement('li');
+      const image = document.createElement('img');
+      image.src = imageUrl;
+      image.alt = title;
+      listItem.appendChild(image);
+      listItem.appendChild(document.createTextNode(title));
+      vistasList.appendChild(listItem);
+
+    // Guardar la lista actualizada en localStorage
+    guardarListaEnLocalStorage('vistasList', vistasList.innerHTML);
+  }
+}
+
+// Función para encontrar una película en una lista por su título
+const encontrarPeliculaEnLista = (title, lista) => {
+  const items = lista.getElementsByTagName('li');
+  for (let i = 0; i < items.length; i++) {
+      if (items[i].textContent.includes(title)) {
+          return items[i];
+      }
+  }
+  return null;
 }
 
 // Función para obtener la URL de la imagen
@@ -89,18 +181,23 @@ const contadorQuiero = document.getElementById("contadorQuiero");
 const botonIncrementarVistas = document.getElementById("vistasBoton");
 const botonIncrementarQuiero = document.getElementById("quieroBoton");
 
-let contadorV = 0;
-let contadorQ = 0;
+const storedVistas = localStorage.getItem('contadorVistas');
+const storedQuiero = localStorage.getItem('contadorQuiero');
+
+let contadorV = storedVistas ? parseInt(storedVistas) : 0;
+let contadorQ = storedQuiero ? parseInt(storedQuiero) : 0;
 // Función para incrementar el contador de Vistas
 const incrementarContadorV = () => {
     contadorV++;
     actualizarContadorV();
+    localStorage.setItem('contadorVistas', contadorV.toString());
 }
 
 // Función para incrementar el contador de Quiero
 const incrementarContadorQ = () => {
     contadorQ++;
     actualizarContadorQ();
+    localStorage.setItem('contadorQuiero', contadorQ.toString());
 }
 const actualizarContadorV = () => {
     contadorVistas.textContent = contadorV;
@@ -108,159 +205,51 @@ const actualizarContadorV = () => {
 const actualizarContadorQ = () => {
     contadorQuiero.textContent = contadorQ;
 }
-botonIncrementarVistas.addEventListener("click", incrementarContadorV);
-botonIncrementarQuiero.addEventListener("click", incrementarContadorQ);
 
-actualizarContadorV();
+// Función para decrementar el contador de Vistas
+const decrementarContadorV = () => {
+  if (contadorV > 0) {
+      contadorV--;
+      actualizarContadorV();
+      localStorage.setItem('contadorVistas', contadorV.toString());
+  }
+}
+
+// Función para decrementar el contador de Quiero
+const decrementarContadorQ = () => {
+  if (contadorQ > 0) {
+      contadorQ--;
+      actualizarContadorQ();
+      localStorage.setItem('contadorQuiero', contadorQ.toString());
+  }
+}
+
+
+
+
 actualizarContadorQ();
+actualizarContadorV();
 
 
+// Función para guardar una lista en localStorage
+const guardarListaEnLocalStorage = (clave, valor) => {
+  localStorage.setItem(clave, valor);
+}
 
-
-////////////////FALTA REVISAR PARA IMPLEMENTAR!!!!!!!!!!!!!!!!!!!!!!!!!!
-//creo la clase constructora para las peliculas
-const listaQuiero = [];
-const listaVistas = [];
-//////////////////////////////////////////////////////////////////////////////////////////    CLASES   ///////////////////////////////////////
-//se crea clase constructora para las peliculas que quiero
-class Quiero {
-  constructor(titulo) {
-      this.titulo = titulo;
-  }
-
-  obtenerInformacionQuiero() {                          //se crea evento
-    console.log(`Agregado a quiero: ${this.titulo}`);
+// Función para cargar una lista desde localStorage
+const cargarListaDesdeLocalStorage = (clave, lista) => {
+  const listaGuardada = localStorage.getItem(clave);
+  if (listaGuardada) {
+    lista.innerHTML = listaGuardada;
   }
 }
 
-//se crea clase constructora para las peliculas que ya las vi
-class Vistas {
-  constructor(titulo) {
-      this.titulo = titulo;
-  }
-  obtenerInformacionVistas() {                           //se crea evento
-    console.log(`Agregado a vistas: ${this.titulo}`);
-  }
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-document.getElementById('agregarQuiero').addEventListener('click', () =>                    //obtengo valor del input de QUIERO
-{
-  const titulo = document.getElementById('entrada').value;
-  const nuevoQuiero = new Quiero(titulo);                       //se crea objeto con los valores ingresados
-  nuevoQuiero.obtenerInformacionQuiero();                       //se llama al evento
-
-  listaQuiero.push(nuevoQuiero);                                  //se agrega dato a array
-});
-
-document.getElementById('agregarVistas').addEventListener('click', () =>        //obtengo valor del input de VISTAS
-{
-  const titulo = document.getElementById('entrada').value;
-  const nuevaVista = new Vistas(titulo);                              //se crea objeto con los valores ingresados
-
-  nuevaVista.obtenerInformacionVistas();
-
-  listaVistas.push(nuevaVista); 
-});
+// Llama a la función para cargar las listas al cargar la página
+cargarListaDesdeLocalStorage('quieroList', quieroList);
+cargarListaDesdeLocalStorage('vistasList', vistasList);
 
 
-console.log(listaQuiero);
-console.log(listaVistas);
-
-
-
-
-
-
-
-
-
-/////////////////////////PRIMER ALGORITMO/////////////////////////////////////
-/*alert("Especifique su edad para poder pasar al boliche");
-let respuesta = parseInt(prompt("ingrese su edad:"));
-if (respuesta >=18 && respuesta <=50){
-  alert("Podes ingresar");
-}
-else if(respuesta>50){
-  alert("No puede ingresar porque es muy mayor");
-}
-else{
-alert("No podes ingresar");
-}
-
-//////////////////////////////////////SEGUNDO ALGORITMO///////////////////////////////////////////////////
-
-alert ("AHORA PASEMOS AL SEGUNDO ALGORITMO");
-alert("Adiviná el número que se encuentra del 1 al 10");
-let res = parseInt(prompt("Ingrese un número del 1 al 10"));
-while(res != 8){
-  alert("intentá de nuevo");
-  res = parseInt(prompt("ingrese otro número"));
-}
-alert("GANASTE!!!");
-
-///////////////////////////////TERCER Y ÚLTIMO ALGORITMO/////////////////////////////////////
-alert("Para salir, solo escriba la palabra SALIR");
-alert("Para salir, solo escriba la palabra SALIR");
-let entrada = prompt("Ingresar un nombre");
-while (entrada != "SALIR") {
-  switch (entrada) {
-    case `${entrada}`:
-      alert("Hola!!! "+`${entrada}`);
-      break;
-    default:
-      alert("¿Nombre?");
-      break;
-  }
-  entrada = prompt("Ingresar un nombre");
-}*/
-
-//creo la clase constructora para las peliculas
-/*const listaQuiero = [];
-const listaVistas = [];
-//////////////////////////////////////////////////////////////////////////////////////////    CLASES   ///////////////////////////////////////
-//se crea clase constructora para las peliculas que quiero
-class Quiero {
-  constructor(titulo) {
-      this.titulo = titulo;
-  }
-
-  obtenerInformacionQuiero() {                          //se crea evento
-    console.log(`Agregado a quiero: ${this.titulo}`);
-  }
-}
-
-//se crea clase constructora para las peliculas que ya las vi
-class Vistas {
-  constructor(titulo) {
-      this.titulo = titulo;
-  }
-  obtenerInformacionVistas() {                           //se crea evento
-    console.log(`Agregado a vistas: ${this.titulo}`);
-  }
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-document.getElementById('agregarQuiero').addEventListener('click', () =>                    //obtengo valor del input de QUIERO
-{
-  const titulo = document.getElementById('entrada').value;
-  const nuevoQuiero = new Quiero(titulo);                       //se crea objeto con los valores ingresados
-  nuevoQuiero.obtenerInformacionQuiero();                       //se llama al evento
-
-  listaQuiero.push(nuevoQuiero);                                  //se agrega dato a array
-});
-
-document.getElementById('agregarVistas').addEventListener('click', () =>        //obtengo valor del input de VISTAS
-{
-  const titulo = document.getElementById('entrada').value;
-  const nuevaVista = new Vistas(titulo);                              //se crea objeto con los valores ingresados
-
-  nuevaVista.obtenerInformacionVistas();
-
-  listaVistas.push(nuevaVista); 
-});
-
-
-console.log(listaQuiero);
-console.log(listaVistas);
-*/
+//botonIncrementarVistas.addEventListener("click", incrementarContadorV);
+//botonIncrementarQuiero.addEventListener("click", incrementarContadorQ);
+//botonIncrementarVistas.addEventListener("click", decrementarContadorQ);
+//botonIncrementarQuiero.addEventListener("click", decrementarContadorV);

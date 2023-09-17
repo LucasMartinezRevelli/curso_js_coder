@@ -10,7 +10,7 @@
   <h1>Buscador de Películas y Series</h1>
 
   <div class="contenedorBusqueda">
-    <input type="text" class ="buscador" id="searchInput" placeholder="Buscar...">
+    <input type="text" class ="buscador" id="searchInput" placeholder="Buscar película o serie...">
     <button class="botonBusqueda"  id="searchButton">Buscar</button>
     <div class="contenedor" id="results">
       <ul>
@@ -20,15 +20,30 @@
   </div>
 
   <div class="info">
-    <h3 class="infoVistas">vistas:</h3>
-    <span id="contadorVistas">0</span>
+    <h3 class="infoVistas">Vistas:</h3>
+    <span class="num" id="contadorVistas">0</span>
     <h3 class="infoQuiero">Quiero:</h3>
-    <span id="contadorQuiero">0</span>
+    <span class="num" id="contadorQuiero">0</span>
   </div>
 
-  <div>
-    
+  <div class="contenedorNavegacion">
+    <a class="navegarVista"  href="#seccionDestino">Vistas</a>
+    <a class="navegarQuiero" href="#seccionDestino2">Quiero</a>
   </div>
+  <br><br>
+
+  <h2 id="seccionDestino">VISTAS</h2>
+  <div class="contenedorCardsVistas">
+    <ul class="cardVistas" id="vistasList"></ul>
+  </div>
+
+
+  <h2 id="seccionDestino2">QUIERO VER</h2>
+
+  <div class="contenedorCardsQuiero">
+    <ul class="cardQuiero" id="quieroList"></ul>
+  </div>
+
   <script src="./main.js"></script>
 </body>
 </html>
